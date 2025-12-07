@@ -1,0 +1,1960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- ==================================================================================
+       HEADER: Meta Tags & Document Configuration
+       ================================================================================== -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="Discover the new Summer 25 Collection. Premium fashion at Aura.">
+  <title>Aura | Premium Fashion</title>
+
+  <!-- Favicon - Shopping Bag Emoji -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛍️</text></svg>">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aura-fashion.com/">
+  <meta property="og:title" content="Aura | Premium Fashion">
+  <meta property="og:description" content="Discover the new Summer 25 Collection.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=1200&h=630&fit=crop&q=80">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Aura Premium Fashion Collection">
+  <meta property="og:site_name" content="Aura">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://aura-fashion.com/">
+  <meta name="twitter:title" content="Aura | Premium Fashion">
+  <meta name="twitter:description" content="Discover the new Summer 25 Collection.">
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=1200&h=630&fit=crop&q=80">
+  <meta name="twitter:image:alt" content="Aura Premium Fashion Collection">
+
+  <!-- Additional SEO -->
+  <meta name="theme-color" content="#FDFBF7">
+  <meta name="author" content="Aura">
+  <link rel="canonical" href="https://aura-fashion.com/">
+
+  <!-- ==================================================================================
+       IMPORTS: External Libraries & Resources
+       ================================================================================== -->
+  <!-- Tailwind CSS - Utility-first CSS framework -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- React 18 - Production builds for better performance -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  
+  <!-- Babel Standalone - Transpiles JSX in browser -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <!-- Framer Motion - Animation library (optimized for mobile) -->
+  <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+  
+  <!-- Model Viewer - 3D model rendering -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+  
+  <!-- Google Fonts - Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- ==================================================================================
+       CSS: Tailwind Configuration & Custom Styles
+       ================================================================================== -->
+  <style>
+    /* CSS Variables - Design tokens */
+    :root { 
+      --bg: #FDFBF7; 
+      --text: #1C1917; 
+    }
+
+    /* Base Styles */
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: var(--bg); 
+      color: var(--text); 
+      -webkit-tap-highlight-color: transparent; 
+      overflow-y: auto; 
+    }
+
+    /* Typography Utilities */
+    .serif { font-family: 'Playfair Display', serif; }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    
+    /* GPU Acceleration - Use sparingly to avoid battery drain */
+    .gpu { 
+      will-change: transform; 
+      transform: translateZ(0); 
+    }
+    
+    /* Video Hero - Full cover video background */
+    .video-hero { 
+      position: absolute; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover; 
+      opacity: 0.95; 
+    }
+    
+    /* 3D Model Viewer Styles */
+    model-viewer { 
+      width: 100%; 
+      height: 100%; 
+      --poster-color: transparent; 
+    }
+    
+    /* Drag States - Visual feedback during drag operations */
+    body.is-dragging { 
+      overflow: hidden; 
+      touch-action: none; 
+    }
+    body.is-dragging main { 
+      filter: blur(2px) grayscale(0.2); 
+      transition: filter 0.3s; 
+    }
+
+    /* Reduced Motion - Respect user preferences for battery/accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Preloader Styles - Ensure it's above everything */
+    .preloader-overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Product Grid Hover Interactions - Enhanced Animations */
+    .product-image-container {
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      will-change: transform;
+    }
+
+    .product-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .product-card:hover .product-image-container {
+      transform: scale(1.08);
+    }
+
+    /* Button Animations */
+    .btn-primary {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-primary:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    /* Fade In Animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    /* Stagger Animation */
+    .stagger-item {
+      opacity: 0;
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    /* Smooth Scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Enhanced Shadows */
+    .shadow-elegant {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .shadow-elegant-lg {
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Gradient Overlays */
+    .gradient-overlay {
+      background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
+      pointer-events: none;
+    }
+    
+    /* Video Fallback */
+    .video-hero-fallback {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: linear-gradient(135deg, #f5f5f4 0%, #e5e5e4 100%);
+    }
+
+    /* Loading Pulse */
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    .animate-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    /* Shimmer Effect */
+    @keyframes shimmer {
+      0% {
+        background-position: -1000px 0;
+      }
+      100% {
+        background-position: 1000px 0;
+      }
+    }
+
+    .shimmer {
+      background: linear-gradient(90deg, #f0f0f0 0%, #e0e0e0 50%, #f0f0f0 100%);
+      background-size: 1000px 100%;
+      animation: shimmer 2s infinite;
+    }
+
+    /* Scale on Hover */
+    .scale-on-hover {
+      transition: transform 0.3s ease;
+    }
+
+    .scale-on-hover:hover {
+      transform: scale(1.05);
+    }
+
+    /* Border Animation */
+    @keyframes borderGlow {
+      0%, 100% {
+        border-color: rgba(0, 0, 0, 0.1);
+      }
+      50% {
+        border-color: rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    /* Smooth Transitions */
+    * {
+      transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-duration: 150ms;
+    }
+
+    /* Mobile Menu - Prevent body scroll when open */
+    body.menu-open {
+      overflow: hidden;
+    }
+
+    /* Touch-friendly tap targets */
+    @media (hover: none) and (pointer: coarse) {
+      button, a {
+        min-height: 44px;
+        min-width: 44px;
+      }
+    }
+  </style>
+
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { 
+            stone: { 
+              50: '#fafaf9', 
+              100: '#f5f5f4', 
+              800: '#292524', 
+              900: '#1c1917' 
+            } 
+          },
+          fontFamily: { 
+            serif: ['Playfair Display', 'serif'], 
+            sans: ['Inter', 'sans-serif'] 
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- ==================================================================================
+       DATA: Constants & Product Data
+       ================================================================================== -->
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useCallback, useMemo, memo } = React;
+    const { AnimatePresence, motion } = window.Motion;
+
+    /**
+     * PRODUCTS - Product catalog data
+     * Each product has: id, name, price, category, image, matchId (for pairing suggestions)
+     * Some products have is3D flag and modelSrc for 3D model viewing
+     */
+    const PRODUCTS = [
+      { id: 101, name: "The Trench", price: 240, category: "Outerwear", image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=80", matchId: 106 },
+      { id: 102, name: "Silk Slip", price: 180, category: "Dresses", image: "https://images.unsplash.com/photo-1618932260643-be4bf999e9d7?w=600&q=80", matchId: 105 },
+      { id: 103, name: "Cashmere Knit", price: 320, category: "Knitwear", image: "https://images.unsplash.com/photo-1624429393339-49d749962a9c?w=600&q=80", matchId: 104 },
+      { id: 104, name: "Pleated Pant", price: 150, category: "Bottoms", image: "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=600&q=80", matchId: 103 },
+      { id: 105, name: "Structure Tote", price: 450, category: "Accessories", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&q=80", is3D: true, modelSrc: "https://modelviewer.dev/shared-assets/models/Astronaut.glb", matchId: 102 },
+      { id: 106, name: "Suede Loafer", price: 210, category: "Footwear", image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=600&q=80", matchId: 101 },
+    ];
+
+    /**
+     * CONSTANTS - Configuration values
+     */
+    const DRAG_DELAY = 300; // Milliseconds before drag activates
+    const DOUBLE_TAP_THRESHOLD = 300; // Milliseconds between taps for double-tap
+    const DRAG_THRESHOLD = 8; // Pixels of movement before drag starts
+    const MATCH_HIGHLIGHT_DURATION = 3500; // How long to show match highlight (ms)
+    const THROTTLE_DELAY = 16; // ~60fps throttling for drag move events
+    const TOAST_DURATION = 3000; // Toast notification display duration
+
+    /**
+     * UTILITIES - Helper functions
+     */
+    const Storage = {
+      get: (key) => {
+        try {
+          const item = localStorage.getItem(key);
+          return item ? JSON.parse(item) : null;
+        } catch (e) {
+          return null;
+        }
+      },
+      set: (key, value) => {
+        try {
+          localStorage.setItem(key, JSON.stringify(value));
+          return true;
+        } catch (e) {
+          return false;
+        }
+      },
+      remove: (key) => {
+        try {
+          localStorage.removeItem(key);
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+    };
+
+    /**
+     * Toast Notification Component
+     */
+    const Toast = ({ message, type = 'success', onClose }) => {
+      useEffect(() => {
+        const timer = setTimeout(() => {
+          onClose();
+        }, TOAST_DURATION);
+        return () => clearTimeout(timer);
+      }, [onClose]);
+
+      return (
+        <motion.div
+          className={`fixed top-20 right-4 z-[10000] bg-white shadow-2xl rounded-sm px-6 py-4 flex items-center gap-3 min-w-[300px] border-l-4 ${
+            type === 'success' ? 'border-green-500' : type === 'error' ? 'border-red-500' : 'border-stone-500'
+          }`}
+          initial={{ x: 400, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: 400, opacity: 0 }}
+        >
+          <div className={`w-2 h-2 rounded-full ${type === 'success' ? 'bg-green-500' : type === 'error' ? 'bg-red-500' : 'bg-stone-500'}`} />
+          <p className="text-sm font-medium text-stone-900 flex-1">{message}</p>
+          <button onClick={onClose} className="text-stone-400 hover:text-stone-900">
+            <Icons.X className="w-4 h-4" />
+          </button>
+        </motion.div>
+      );
+    };
+
+    /* ==================================================================================
+       COMPONENTS: Reusable UI Components
+       ================================================================================== */
+
+    /**
+     * ICONS - SVG icon components
+     * Lightweight inline SVGs for better performance than icon fonts
+     */
+    const Icons = {
+      Menu: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>,
+      Bag: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>,
+      Heart: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>,
+      X: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M18 6 6 18M6 6l12 12"/></svg>,
+      Box3D: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>,
+      Sparkles: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/></svg>,
+      Plus: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 5v14M5 12h14"/></svg>,
+      Minus: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14"/></svg>,
+      Search: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>,
+      Check: (p) => <svg {...p} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
+    };
+
+    /**
+     * ModelView - 3D Model Viewer Component
+     * Wrapped in memo to prevent unnecessary re-renders
+     * Note: auto-rotate disabled by default to save battery; can be enabled via user interaction
+     */
+    const ModelView = memo(({ src, poster }) => (
+      <model-viewer 
+        src={src} 
+        ios-src={src} 
+        poster={poster} 
+        shadow-intensity="1" 
+        ar 
+        touch-action="pan-y"
+        interaction-policy="allow-when-focused"
+      >
+        <div slot="poster" className="absolute inset-0 bg-stone-100/50 animate-pulse"/>
+      </model-viewer>
+    ));
+
+    /**
+     * ProductImage - Image component with error handling
+     * Provides fallback UI if image fails to load
+     */
+    const ProductImage = ({ src, alt, className }) => {
+      const [error, setError] = useState(false);
+      
+      if (error) {
+        return (
+          <div className={`flex items-center justify-center bg-stone-200 text-stone-400 ${className}`}>
+             <Icons.Bag className="w-8 h-8 opacity-50" />
+          </div>
+        );
+      }
+      
+      return (
+        <img 
+          src={src} 
+          alt={alt || 'Product image'} 
+          className={className} 
+          onError={() => setError(true)}
+          loading="lazy"
+          decoding="async"
+        />
+      );
+    };
+
+    /**
+     * DraggableWrapper - Handles drag-to-cart and double-tap interactions
+     * 
+     * Performance optimizations:
+     * - Uses refs to avoid re-renders
+     * - Cleans up timeouts on unmount
+     * - Prevents accidental drags with threshold check
+     */
+    const DraggableWrapper = ({ children, item, onDragStart, onDoubleTap }) => {
+      const timerRef = useRef(null);
+      const startPos = useRef({ x: 0, y: 0 });
+      const lastTapRef = useRef(0);
+      const isPressedRef = useRef(false);
+
+      // Cleanup timeout on unmount to prevent memory leaks
+      useEffect(() => {
+        return () => {
+          if (timerRef.current) {
+            clearTimeout(timerRef.current);
+          }
+        };
+      }, []);
+
+      const handleStart = (e) => {
+        const now = Date.now();
+        
+        // Double-tap detection
+        if (now - lastTapRef.current < DOUBLE_TAP_THRESHOLD) {
+          clearTimeout(timerRef.current);
+          timerRef.current = null;
+          onDoubleTap(item);
+          return;
+        }
+        lastTapRef.current = now;
+
+        // Get initial touch/mouse position
+        const clientX = e.type.includes('mouse') ? e.clientX : (e.touches?.[0]?.clientX ?? 0);
+        const clientY = e.type.includes('mouse') ? e.clientY : (e.touches?.[0]?.clientY ?? 0);
+        startPos.current = { x: clientX, y: clientY };
+        isPressedRef.current = true;
+
+        // Visual feedback
+        e.currentTarget.style.transform = 'scale(0.96)';
+        e.currentTarget.style.transition = 'transform 0.2s';
+
+        // Delay before drag activates (prevents accidental drags)
+        timerRef.current = setTimeout(() => {
+          if (isPressedRef.current) {
+             onDragStart(item, { x: clientX, y: clientY });
+             if (navigator.vibrate) navigator.vibrate(50);
+             e.currentTarget.style.transform = ''; 
+          }
+        }, DRAG_DELAY); 
+      };
+
+      const handleMove = (e) => {
+        if (!timerRef.current) return;
+        
+        const clientX = e.type.includes('mouse') ? e.clientX : (e.touches?.[0]?.clientX ?? 0);
+        const clientY = e.type.includes('mouse') ? e.clientY : (e.touches?.[0]?.clientY ?? 0);
+        
+        // Cancel drag if user moves too much (likely scrolling, not dragging)
+        if (Math.hypot(clientX - startPos.current.x, clientY - startPos.current.y) > DRAG_THRESHOLD) {
+          clearTimeout(timerRef.current);
+          timerRef.current = null;
+          isPressedRef.current = false;
+          e.currentTarget.style.transform = ''; 
+        }
+      };
+
+      const handleEnd = () => {
+        if (timerRef.current) {
+          clearTimeout(timerRef.current);
+          timerRef.current = null;
+        }
+        isPressedRef.current = false;
+        // Reset transform safely
+        try { 
+          const target = document.activeElement;
+          if (target && target.style) target.style.transform = ''; 
+        } catch(e) {}
+      };
+
+      return (
+        <div
+          className="touch-pan-y select-none cursor-grab active:cursor-grabbing gpu"
+          onMouseDown={handleStart} 
+          onMouseMove={handleMove} 
+          onMouseUp={handleEnd} 
+          onMouseLeave={handleEnd}
+          onTouchStart={handleStart} 
+          onTouchMove={handleMove} 
+          onTouchEnd={handleEnd}
+        >
+          {children}
+        </div>
+      );
+    };
+
+    /* ==================================================================================
+       MAIN LOGIC: App Component & State Management
+       ================================================================================== */
+
+    /**
+     * Preloader - Cinematic loading screen component
+     * Features:
+     * - Full-screen black overlay
+     * - Centered brand logo
+     * - Animated progress bar with percentage
+     * - Smooth slide-up exit animation
+     */
+    const Preloader = ({ progress, isVisible }) => {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      
+      const preloaderVariants = {
+        initial: { y: 0 },
+        exit: { 
+          y: '-100%',
+          transition: { 
+            duration: prefersReducedMotion ? 0.3 : 1.2, 
+            ease: [0.25, 0.46, 0.45, 0.94] // Custom easing for "heavy" feel
+          }
+        }
+      };
+
+      const contentVariants = {
+        initial: { opacity: 0, y: 20 },
+        animate: { 
+          opacity: 1, 
+          y: 0,
+          transition: { duration: 0.6, delay: 0.2 }
+        }
+      };
+
+      if (!isVisible) return null;
+
+      return (
+        <AnimatePresence>
+          {isVisible && (
+            <motion.div
+              className="fixed inset-0 bg-black z-[9999] flex items-center justify-center"
+              variants={preloaderVariants}
+              initial="initial"
+              exit="exit"
+            >
+              <motion.div 
+                className="flex flex-col items-center gap-8"
+                variants={contentVariants}
+                initial="initial"
+                animate="animate"
+              >
+                {/* Brand Logo */}
+                <div className="flex items-center gap-3">
+                  <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+                    <span className="text-2xl font-serif italic font-bold text-black">A</span>
+                  </div>
+                  <span className="text-4xl font-bold italic serif text-white">Aura.</span>
+                </div>
+
+                {/* Progress Bar Container */}
+                <div className="w-64 flex flex-col items-center gap-3">
+                  {/* Progress Bar */}
+                  <div className="w-full h-0.5 bg-white/20 rounded-full overflow-hidden">
+                    <motion.div
+                      className="h-full bg-white"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${progress}%` }}
+                      transition={{ duration: 0.3, ease: 'easeOut' }}
+                    />
+                  </div>
+                  
+                  {/* Percentage Counter */}
+                  <motion.span 
+                    className="text-white text-sm font-light tracking-widest"
+                    key={progress}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {Math.round(progress)}%
+                  </motion.span>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      );
+    };
+
+    /**
+     * App - Main application component
+     * 
+     * State Management:
+     * - isLoading: Controls preloader visibility
+     * - cart: Array of items in shopping cart
+     * - wishlist: Array of saved items
+     * - selectedId: Currently viewed product detail
+     * - activeDrag: Current drag operation data
+     * - dropZone: Current drop target ('cart' | 'wishlist' | null)
+     * - matchId: Product ID to highlight (for pairing suggestions)
+     */
+    const App = () => {
+      const [isLoading, setIsLoading] = useState(true);
+      const [loadProgress, setLoadProgress] = useState(0);
+      const [cart, setCart] = useState(() => Storage.get('aura_cart') || []);
+      const [wishlist, setWishlist] = useState(() => Storage.get('aura_wishlist') || []);
+      const [selectedId, setSelectedId] = useState(null);
+      const [selectedSize, setSelectedSize] = useState(null);
+      const [sizeError, setSizeError] = useState(false);
+      const [activeDrag, setActiveDrag] = useState(null);
+      const [dropZone, setDropZone] = useState(null);
+      const [matchId, setMatchId] = useState(null);
+      const [isCartOpen, setIsCartOpen] = useState(false);
+      const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+      const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+      const [toasts, setToasts] = useState([]);
+      const [searchQuery, setSearchQuery] = useState('');
+      const [selectedCategory, setSelectedCategory] = useState('all');
+      const [orderConfirmed, setOrderConfirmed] = useState(false);
+
+      // Refs for DOM elements
+      const ghostRef = useRef(null);
+      const cartRef = useRef(null);
+      const wishRef = useRef(null);
+      const matchTimeoutRef = useRef(null);
+      const throttleRef = useRef(null);
+      const lastMoveTimeRef = useRef(0);
+      const dropZoneRef = useRef(null); // Track dropZone in ref to avoid closure issues
+      const loadStartTimeRef = useRef(Date.now());
+      const progressIntervalRef = useRef(null);
+      const checkoutFormRef = useRef(null);
+
+      /**
+       * Persist cart and wishlist to localStorage
+       */
+      useEffect(() => {
+        Storage.set('aura_cart', cart);
+      }, [cart]);
+
+      useEffect(() => {
+        Storage.set('aura_wishlist', wishlist);
+      }, [wishlist]);
+
+      /**
+       * Toast notification handler
+       */
+      const showToast = useCallback((message, type = 'success') => {
+        const id = Date.now();
+        setToasts(prev => [...prev, { id, message, type }]);
+      }, []);
+
+      const removeToast = useCallback((id) => {
+        setToasts(prev => prev.filter(t => t.id !== id));
+      }, []);
+
+      /**
+       * Preloader Logic - Handles loading state and progress
+       * Combines window load event with minimum 2-second display time
+       * Progress bar animates smoothly from 0% to 100%
+       */
+      useEffect(() => {
+        let isMounted = true;
+        const MIN_LOAD_TIME = 2000; // Minimum 2 seconds
+        const startTime = Date.now();
+        loadStartTimeRef.current = startTime;
+        let animationFrameId = null;
+
+        // Simulate smooth progress (0-100%)
+        const updateProgress = () => {
+          if (!isMounted) return;
+          
+          const elapsed = Date.now() - startTime;
+          const progress = Math.min((elapsed / MIN_LOAD_TIME) * 100, 100);
+          setLoadProgress(progress);
+
+          if (progress < 100) {
+            animationFrameId = requestAnimationFrame(updateProgress);
+            progressIntervalRef.current = animationFrameId;
+          }
+        };
+
+        // Start progress animation
+        updateProgress();
+
+        // Handle actual page load
+        const handleLoad = () => {
+          if (!isMounted) return;
+          
+          const elapsed = Date.now() - startTime;
+          const remainingTime = Math.max(0, MIN_LOAD_TIME - elapsed);
+
+          // Ensure progress reaches 100%
+          setLoadProgress(100);
+
+          // Wait for minimum time, then hide preloader
+          setTimeout(() => {
+            if (isMounted) {
+              // Small delay before exit animation starts
+              setTimeout(() => {
+                if (isMounted) {
+                  setIsLoading(false);
+                }
+              }, 150);
+            }
+          }, remainingTime);
+        };
+
+        // Check if already loaded
+        if (document.readyState === 'complete') {
+          handleLoad();
+        } else {
+          window.addEventListener('load', handleLoad);
+        }
+
+        // Cleanup
+        return () => {
+          isMounted = false;
+          if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+          }
+          if (progressIntervalRef.current) {
+            cancelAnimationFrame(progressIntervalRef.current);
+          }
+          window.removeEventListener('load', handleLoad);
+        };
+      }, []);
+
+      /**
+       * Cleanup match highlight timeout on unmount
+       */
+      useEffect(() => {
+        return () => {
+          if (matchTimeoutRef.current) {
+            clearTimeout(matchTimeoutRef.current);
+          }
+        };
+      }, []);
+
+      /**
+       * Drag & Drop Event Handlers
+       * 
+       * Performance optimizations:
+       * - Throttles move events to ~60fps
+       * - Caches getBoundingClientRect() results
+       * - Uses refs to avoid closure issues
+       * - Properly cleans up all event listeners
+       */
+      useEffect(() => {
+        if (!activeDrag) return;
+
+        // Cache drop zone rects to avoid repeated DOM queries
+        let cartRect = null;
+        let wishRect = null;
+        let rectsCached = false;
+
+        const cacheRects = () => {
+          if (!rectsCached) {
+            cartRect = cartRef.current?.getBoundingClientRect();
+            wishRect = wishRef.current?.getBoundingClientRect();
+            rectsCached = true;
+          }
+        };
+
+        const handleMove = (e) => {
+          // Throttle to ~60fps for better performance
+          const now = performance.now();
+          if (now - lastMoveTimeRef.current < THROTTLE_DELAY) return;
+          lastMoveTimeRef.current = now;
+
+          e.preventDefault(); 
+          
+          const x = e.touches ? e.touches[0].clientX : e.clientX;
+          const y = e.touches ? e.touches[0].clientY : e.clientY;
+          
+          // Update ghost position
+          if (ghostRef.current) {
+             ghostRef.current.style.transform = `translate(${x}px, ${y}px) translate(-50%, -100%) rotate(5deg)`;
+          }
+
+          // Cache rects once per drag
+          cacheRects();
+
+          // Check drop zones (using cached rects)
+          let zone = null;
+          if (cartRect && x >= cartRect.left - 20 && x <= cartRect.right + 20 && y >= cartRect.top - 50 && y <= cartRect.bottom + 20) {
+            zone = 'cart';
+          } else if (wishRect && x >= wishRect.left - 50 && y <= wishRect.bottom + 50) {
+            zone = 'wishlist';
+          }
+          
+          dropZoneRef.current = zone; // Update ref
+          setDropZone(zone);
+        };
+
+        const handleUp = () => {
+          if (!activeDrag) return;
+
+          // Handle drop - use ref to get latest value
+          const currentZone = dropZoneRef.current;
+          if (currentZone === 'cart') {
+            setCart(p => [...p, activeDrag.item]);
+            if (navigator.vibrate) navigator.vibrate([50, 50]);
+            
+            // Show match highlight if product has a match
+            if (activeDrag.item.matchId) {
+               setMatchId(activeDrag.item.matchId);
+               // Clean up previous timeout if exists
+               if (matchTimeoutRef.current) {
+                 clearTimeout(matchTimeoutRef.current);
+               }
+               matchTimeoutRef.current = setTimeout(() => {
+                 setMatchId(null);
+                 matchTimeoutRef.current = null;
+               }, MATCH_HIGHLIGHT_DURATION);
+            }
+          } else if (currentZone === 'wishlist') {
+            setWishlist(p => [...p, activeDrag.item]);
+            if (navigator.vibrate) navigator.vibrate(50);
+          }
+
+          // Reset drag state
+          setActiveDrag(null);
+          setDropZone(null);
+          document.body.classList.remove('is-dragging');
+        };
+
+        // Attach event listeners
+        window.addEventListener('touchmove', handleMove, { passive: false });
+        window.addEventListener('touchend', handleUp);
+        window.addEventListener('pointermove', handleMove);
+        window.addEventListener('pointerup', handleUp);
+
+        // Cleanup function - removes all listeners
+        return () => {
+          window.removeEventListener('touchmove', handleMove);
+          window.removeEventListener('touchend', handleUp);
+          window.removeEventListener('pointermove', handleMove);
+          window.removeEventListener('pointerup', handleUp);
+        };
+      }, [activeDrag]); // Removed dropZone from deps to prevent unnecessary re-renders
+
+      /**
+       * startDrag - Initiates drag operation
+       * Uses useCallback to prevent unnecessary re-renders
+       */
+      const startDrag = useCallback((item, pos) => {
+        setActiveDrag({ item });
+        requestAnimationFrame(() => {
+           if (ghostRef.current) {
+             ghostRef.current.style.transform = `translate(${pos.x}px, ${pos.y}px) translate(-50%, -100%) rotate(5deg)`;
+           }
+        });
+        document.body.classList.add('is-dragging');
+      }, []);
+
+      /**
+       * handleDoubleTap - Quick add to cart on double tap
+       */
+      const handleDoubleTap = useCallback((item) => {
+        setCart(p => [...p, { ...item, quantity: 1, cartId: Date.now() }]);
+        showToast(`${item.name} added to bag`, 'success');
+        if (navigator.vibrate) navigator.vibrate(50);
+      }, [showToast]);
+
+      /**
+       * Add to cart handler
+       */
+      const addToCart = useCallback((item, size = null) => {
+        const itemName = size ? `${item.name} - Size ${size}` : item.name;
+        setCart(p => [...p, { ...item, name: itemName, size, quantity: 1, cartId: Date.now() }]);
+        showToast(`${itemName} added to bag`, 'success');
+        if (navigator.vibrate) navigator.vibrate(50);
+      }, [showToast]);
+
+      /**
+       * Update cart item quantity
+       */
+      const updateQuantity = useCallback((cartId, delta) => {
+        setCart(prev => prev.map(item => {
+          if (item.cartId === cartId) {
+            const newQuantity = Math.max(1, item.quantity + delta);
+            return { ...item, quantity: newQuantity };
+          }
+          return item;
+        }));
+      }, []);
+
+      /**
+       * Remove from cart
+       */
+      const removeFromCart = useCallback((cartId) => {
+        setCart(prev => {
+          const item = prev.find(i => i.cartId === cartId);
+          const newCart = prev.filter(i => i.cartId !== cartId);
+          if (item) showToast(`${item.name} removed from bag`, 'success');
+          return newCart;
+        });
+      }, [showToast]);
+
+      /**
+       * Filter products by search and category
+       */
+      const filteredProducts = useMemo(() => {
+        return PRODUCTS.filter(p => {
+          const matchesSearch = !searchQuery || 
+            p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            p.category.toLowerCase().includes(searchQuery.toLowerCase());
+          const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
+          return matchesSearch && matchesCategory;
+        });
+      }, [searchQuery, selectedCategory]);
+
+      /**
+       * Prevent body scroll when mobile menu is open
+       */
+      useEffect(() => {
+        if (isMobileMenuOpen) {
+          document.body.classList.add('menu-open');
+        } else {
+          document.body.classList.remove('menu-open');
+        }
+        return () => {
+          document.body.classList.remove('menu-open');
+        };
+      }, [isMobileMenuOpen]);
+
+      /**
+       * selectedItem - Memoized selected product lookup
+       */
+      const selectedItem = useMemo(() => PRODUCTS.find(p => p.id === selectedId), [selectedId]);
+
+      /**
+       * Reset size selection when modal opens/closes
+       */
+      useEffect(() => {
+        if (selectedId) {
+          setSelectedSize(null);
+          setSizeError(false);
+        }
+      }, [selectedId]);
+
+      /**
+       * Animation variants - Optimized for mobile battery
+       * Uses reduced motion support
+       */
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const modalVariants = {
+        overlay: {
+          initial: { opacity: 0 },
+          animate: { opacity: 1 },
+          exit: { opacity: 0 },
+          transition: { duration: prefersReducedMotion ? 0 : 0.2 }
+        },
+        content: {
+          initial: { y: prefersReducedMotion ? 0 : 50, opacity: 0 },
+          animate: { y: 0, opacity: 1 },
+          exit: { y: prefersReducedMotion ? 0 : 50, opacity: 0 },
+          transition: { duration: prefersReducedMotion ? 0 : 0.3, ease: 'easeOut' }
+        }
+      };
+
+      return (
+        <div className="relative min-h-screen pb-32 selection:bg-stone-900 selection:text-white">
+          
+          {/* Cinematic Preloader */}
+          <Preloader progress={loadProgress} isVisible={isLoading} />
+          
+          {/* Navigation Header */}
+          <motion.nav 
+            className="fixed top-0 w-full z-40 px-6 py-5 flex justify-between items-center bg-gradient-to-b from-[var(--bg)] via-[var(--bg)]/95 to-transparent backdrop-blur-sm pointer-events-none"
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+          >
+            <motion.button 
+              className="pointer-events-auto p-2 hover:bg-stone-100 rounded-full transition-colors scale-on-hover md:hidden" 
+              aria-label="Menu"
+              onClick={() => setIsMobileMenuOpen(true)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Icons.Menu className="w-6 h-6" />
+            </motion.button>
+            
+            {/* Desktop Menu Button (hidden on mobile) */}
+            <motion.button 
+              className="pointer-events-auto p-2 hover:bg-stone-100 rounded-full transition-colors scale-on-hover hidden md:block" 
+              aria-label="Menu"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Icons.Menu className="w-6 h-6" />
+            </motion.button>
+            
+            {/* Logo */}
+            <motion.div 
+              className="flex items-center gap-2 pointer-events-auto cursor-pointer" 
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+               <motion.div 
+                 className="w-8 h-8 bg-stone-900 rounded-full flex items-center justify-center text-white font-serif italic font-bold shadow-elegant"
+                 whileHover={{ rotate: 360 }}
+                 transition={{ duration: 0.6 }}
+               >
+                 A
+               </motion.div>
+               <span className="text-xl font-bold italic serif">Aura.</span>
+            </motion.div>
+            
+            {/* Category Links */}
+            <motion.div 
+              className="hidden md:flex items-center gap-6 pointer-events-auto"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              {['all', 'Outerwear', 'Dresses', 'Accessories'].map((cat, idx) => (
+                <motion.button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`text-sm transition-all relative ${selectedCategory === cat ? 'text-stone-900 font-medium' : 'text-stone-600 hover:text-stone-900'}`}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ y: 0 }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                >
+                  {cat === 'all' ? 'All' : cat}
+                  {selectedCategory === cat && (
+                    <motion.div
+                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-stone-900"
+                      layoutId="categoryIndicator"
+                      initial={false}
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    />
+                  )}
+                </motion.button>
+              ))}
+            </motion.div>
+            
+            {/* Wishlist Button */}
+            <motion.div 
+              ref={wishRef} 
+              className={`pointer-events-auto transition-all duration-300 flex items-center gap-2 p-2 rounded-full ${dropZone === 'wishlist' ? 'bg-stone-100 scale-110 ring-2 ring-stone-900' : 'hover:bg-stone-50'}`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+               <motion.div
+                 animate={{ scale: wishlist.length > 0 ? [1, 1.2, 1] : 1 }}
+                 transition={{ duration: 0.3 }}
+               >
+                 <Icons.Heart className={`w-5 h-5 transition-colors ${wishlist.length > 0 ? 'fill-red-500 stroke-red-500' : ''}`} />
+               </motion.div>
+               <span className={`text-xs font-bold transition-all ${dropZone === 'wishlist' ? 'w-auto pl-1 opacity-100' : 'w-0 opacity-0 overflow-hidden'}`}>Save</span>
+            </motion.div>
+          </motion.nav>
+
+          {/* Mobile Menu Drawer */}
+          <AnimatePresence>
+            {isMobileMenuOpen && (
+              <motion.div
+                className="fixed inset-0 z-[100] pointer-events-none md:hidden"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {/* Backdrop */}
+                <motion.div
+                  className="absolute inset-0 bg-black/50 backdrop-blur-sm pointer-events-auto"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                />
+
+                {/* Sidebar Drawer */}
+                <motion.div
+                  className="absolute left-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white shadow-2xl pointer-events-auto flex flex-col"
+                  initial={{ x: '-100%' }}
+                  animate={{ x: 0 }}
+                  exit={{ x: '-100%' }}
+                  transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                >
+                  {/* Header */}
+                  <div className="flex items-center justify-between p-6 border-b border-stone-200">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-stone-900 rounded-full flex items-center justify-center text-white font-serif italic font-bold">
+                        A
+                      </div>
+                      <span className="text-xl font-bold italic serif">Aura.</span>
+                    </div>
+                    <motion.button
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="p-2 hover:bg-stone-100 rounded-full transition-colors"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      aria-label="Close menu"
+                    >
+                      <Icons.X className="w-6 h-6" />
+                    </motion.button>
+                  </div>
+
+                  {/* Menu Items */}
+                  <nav className="flex-1 overflow-y-auto p-6">
+                    <div className="space-y-1">
+                      {[
+                        { id: 'all', label: 'All Products' },
+                        { id: 'Outerwear', label: 'Outerwear' },
+                        { id: 'Dresses', label: 'Dresses' },
+                        { id: 'Accessories', label: 'Accessories' }
+                      ].map((cat, idx) => (
+                        <motion.button
+                          key={cat.id}
+                          onClick={() => {
+                            setSelectedCategory(cat.id);
+                            setIsMobileMenuOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-3 rounded-sm transition-colors ${
+                            selectedCategory === cat.id
+                              ? 'bg-stone-100 text-stone-900 font-medium'
+                              : 'text-stone-600 hover:bg-stone-50 hover:text-stone-900'
+                          }`}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: idx * 0.1, duration: 0.3 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <span className="text-base">{cat.label}</span>
+                        </motion.button>
+                      ))}
+                    </div>
+
+                    {/* Additional Mobile Menu Items */}
+                    <div className="mt-8 pt-8 border-t border-stone-200">
+                      <motion.button
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          setIsCartOpen(true);
+                        }}
+                        className="w-full text-left px-4 py-3 rounded-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900 transition-colors flex items-center gap-3"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.4, duration: 0.3 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Icons.Bag className="w-5 h-5" />
+                        <span className="text-base">Shopping Bag</span>
+                        {cart.length > 0 && (
+                          <span className="ml-auto bg-stone-900 text-white text-xs px-2 py-1 rounded-full">
+                            {cart.length}
+                          </span>
+                        )}
+                      </motion.button>
+                      
+                      <motion.button
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          // Wishlist functionality can be added here
+                        }}
+                        className="w-full text-left px-4 py-3 rounded-sm text-stone-600 hover:bg-stone-50 hover:text-stone-900 transition-colors flex items-center gap-3 mt-1"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.5, duration: 0.3 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Icons.Heart className={`w-5 h-5 ${wishlist.length > 0 ? 'fill-red-500 stroke-red-500' : ''}`} />
+                        <span className="text-base">Wishlist</span>
+                        {wishlist.length > 0 && (
+                          <span className="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                            {wishlist.length}
+                          </span>
+                        )}
+                      </motion.button>
+                    </div>
+                  </nav>
+
+                  {/* Footer */}
+                  <div className="p-6 border-t border-stone-200">
+                    <p className="text-xs text-stone-400 text-center">
+                      Aura v3.4 &copy; 2025
+                    </p>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <main className="px-6 pt-24 space-y-12">
+            
+            {/* Hero Video Section */}
+            <motion.section 
+              className="relative w-full aspect-[4/5] sm:aspect-[21/9] bg-stone-200 overflow-hidden rounded-sm group shadow-elegant-lg"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+               {/* Fallback Background Image */}
+               <div 
+                 className="video-hero-fallback"
+                 style={{
+                   backgroundImage: 'url(https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=1200&q=80)',
+                   backgroundSize: 'cover',
+                   backgroundPosition: 'center'
+                 }}
+               />
+               
+               {/* Video Element */}
+               <video 
+                 autoPlay 
+                 loop 
+                 muted 
+                 playsInline 
+                 className="video-hero"
+                 preload="auto"
+                 poster="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=1200&q=80"
+                 aria-label="Hero video"
+                 onError={(e) => {
+                   console.log('Video failed to load, using fallback');
+                   e.target.style.display = 'none';
+                 }}
+               >
+                  <source src="https://videos.pexels.com/video-files/3205934/3205934-hd_1920_1080_25fps.mp4" type="video/mp4"/>
+                  <source src="https://videos.pexels.com/video-files/3205934/3205934-uhd_2560_1440_25fps.mp4" type="video/mp4"/>
+               </video>
+               
+               {/* Gradient Overlay - Lighter for better visibility */}
+               <div className="absolute inset-0 gradient-overlay z-[1]"></div>
+               
+               {/* Content Overlay */}
+               <motion.div 
+                 className="absolute bottom-8 left-6 text-white max-w-[80%] drop-shadow-lg z-[2]"
+                 initial={{ opacity: 0, y: 30 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 transition={{ duration: 0.8, delay: 0.6 }}
+               >
+                 <motion.span 
+                   className="text-[10px] uppercase tracking-widest mb-3 block border-l-2 border-white pl-2"
+                   initial={{ opacity: 0, x: -20 }}
+                   animate={{ opacity: 1, x: 0 }}
+                   transition={{ duration: 0.6, delay: 0.8 }}
+                 >
+                   Summer 25
+                 </motion.span>
+                 <motion.h2 
+                   className="text-5xl font-serif italic leading-none mb-6"
+                   initial={{ opacity: 0, y: 20 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   transition={{ duration: 0.8, delay: 1 }}
+                 >
+                   Motion <br/>Blur
+                 </motion.h2>
+                 <motion.button 
+                   className="text-sm border-b border-white pb-1 hover:opacity-80 transition-opacity"
+                   whileHover={{ scale: 1.05 }}
+                   whileTap={{ scale: 0.95 }}
+                   initial={{ opacity: 0 }}
+                   animate={{ opacity: 1 }}
+                   transition={{ duration: 0.6, delay: 1.2 }}
+                 >
+                   Watch Film
+                 </motion.button>
+               </motion.div>
+            </motion.section>
+
+            {/* Search Bar */}
+            <motion.div 
+              className="flex items-center gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <div className="relative flex-1 max-w-md group">
+                <Icons.Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-stone-400 group-focus-within:text-stone-900 transition-colors" />
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 border border-stone-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-stone-900 focus:border-transparent transition-all shadow-elegant hover:shadow-elegant-lg"
+                />
+              </div>
+            </motion.div>
+
+            {/* Product Grid */}
+            <div className="grid grid-cols-2 gap-x-4 gap-y-12">
+               {filteredProducts.length === 0 ? (
+                 <motion.div 
+                   className="col-span-2 text-center py-12"
+                   initial={{ opacity: 0 }}
+                   animate={{ opacity: 1 }}
+                 >
+                   <p className="text-stone-400 text-sm">No products found</p>
+                 </motion.div>
+               ) : (
+                 filteredProducts.map((p, index) => (
+                 <motion.div 
+                   key={p.id} 
+                   className={`product-card relative bg-white rounded-sm shadow-elegant transition-all duration-300 group flex flex-col overflow-hidden
+                    ${activeDrag?.item.id === p.id ? 'opacity-30 grayscale' : 'opacity-100'}
+                    ${matchId === p.id ? 'ring-2 ring-stone-900 ring-offset-4 ring-offset-[#FDFBF7]' : ''}
+                 `}
+                   initial={{ opacity: 0, y: 30 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   transition={{ duration: 0.5, delay: index * 0.1 }}
+                   whileHover={{ y: -4 }}
+                 >
+                    <DraggableWrapper item={p} onDragStart={startDrag} onDoubleTap={handleDoubleTap}>
+                      <div className="relative aspect-[3/4] bg-stone-100 overflow-hidden cursor-pointer" onClick={() => setSelectedId(p.id)}>
+                         <div className="product-image-container w-full h-full">
+                           <ProductImage src={p.image} alt={p.name} className="w-full h-full object-cover pointer-events-none" />
+                         </div>
+                         
+                         {p.is3D && (
+                           <div className="absolute top-2 right-2 bg-white/90 p-1.5 rounded-full z-10">
+                             <Icons.Box3D className="w-4 h-4 text-stone-900" />
+                           </div>
+                         )}
+                         {matchId === p.id && (
+                           <div className="absolute bottom-2 left-2 bg-stone-900 text-white text-[10px] px-2 py-1 uppercase tracking-widest font-bold flex gap-1 z-10">
+                             <Icons.Sparkles className="w-3 h-3" /> Match
+                           </div>
+                         )}
+                      </div>
+                      <div className="p-4 flex flex-col gap-2 flex-1">
+                        <h3 className="font-serif text-base leading-tight text-stone-900">{p.name}</h3>
+                        <p className="text-base font-bold text-stone-900">${p.price}</p>
+                        <motion.button
+                          className="btn-primary w-full bg-stone-900 text-white py-2.5 text-xs font-medium uppercase tracking-widest hover:bg-stone-800 transition-all mt-2 relative z-10"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedId(p.id);
+                          }}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <span className="relative z-10">Add to Bag</span>
+                        </motion.button>
+                      </div>
+                    </DraggableWrapper>
+                 </motion.div>
+                 ))
+               )}
+            </div>
+
+            {/* Footer */}
+            <div className="py-12 text-center border-t border-stone-100 mt-12 text-stone-400 text-xs tracking-widest uppercase">
+               Aura v3.4 &copy; 2025
+            </div>
+          </main>
+
+          {/* Drag Ghost - Visual feedback during drag */}
+          <div 
+            ref={ghostRef} 
+            className={`fixed z-[9999] pointer-events-none flex flex-col items-center top-0 left-0 transition-opacity duration-200 ${activeDrag ? 'opacity-100' : 'opacity-0'}`}
+            aria-hidden="true"
+          >
+             {activeDrag && (
+               <div className={`bg-white p-2 rounded-sm shadow-2xl border-2 overflow-hidden flex items-center gap-3 w-48 ${dropZone ? 'border-stone-900 scale-110' : 'border-stone-100 rotate-3'} transition-all duration-200`}>
+                 <img src={activeDrag.item.image} alt={activeDrag.item.name} className="w-12 h-12 object-cover bg-stone-100" />
+                 <div className="flex-1 min-w-0">
+                   <p className="font-bold text-xs truncate">{activeDrag.item.name}</p>
+                   <p className="text-[10px] text-stone-500 uppercase tracking-widest">
+                     {dropZone === 'cart' ? 'Add to Bag' : dropZone === 'wishlist' ? 'Save Item' : 'Dragging'}
+                   </p>
+                 </div>
+               </div>
+             )}
+          </div>
+
+          {/* Shopping Cart Button */}
+          <motion.div 
+            className="fixed bottom-8 inset-x-0 z-40 flex justify-center pointer-events-none"
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+             <motion.div 
+               ref={cartRef} 
+               className={`pointer-events-auto bg-stone-900 text-white h-16 rounded-full shadow-elegant-lg flex items-center gap-3 px-8 backdrop-blur-xl border border-white/10 cursor-pointer ${dropZone === 'cart' ? 'ring-4 ring-stone-200' : ''}`}
+               onClick={() => setIsCartOpen(true)}
+               whileHover={{ scale: 1.05, y: -2 }}
+               whileTap={{ scale: 0.95 }}
+               animate={{ scale: dropZone === 'cart' ? 1.1 : 1 }}
+               transition={{ type: "spring", stiffness: 400, damping: 17 }}
+             >
+                <div className="relative">
+                  <Icons.Bag className="w-5 h-5" />
+                  {cart.length > 0 && (
+                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-white text-stone-900 rounded-full text-[8px] flex items-center justify-center font-bold">
+                      {cart.length}
+                    </span>
+                  )}
+                </div>
+                <span className="text-sm font-medium tracking-wide">Bag</span>
+             </motion.div>
+          </motion.div>
+
+          {/* Cart Drawer */}
+          <AnimatePresence>
+            {isCartOpen && (
+              <motion.div
+                className="fixed inset-0 z-[100] pointer-events-none"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                {/* Backdrop */}
+                <div 
+                  className="absolute inset-0 bg-black/50 backdrop-blur-sm pointer-events-auto"
+                  onClick={() => setIsCartOpen(false)}
+                />
+                
+                {/* Cart Panel */}
+                <motion.div
+                  className="absolute right-0 top-0 bottom-0 w-full max-w-md bg-white shadow-2xl pointer-events-auto flex flex-col"
+                  initial={{ x: '100%' }}
+                  animate={{ x: 0 }}
+                  exit={{ x: '100%' }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                >
+                  {/* Cart Header */}
+                  <div className="flex items-center justify-between p-6 border-b border-stone-200">
+                    <h2 className="text-xl font-serif italic font-bold">Shopping Bag</h2>
+                    <button
+                      onClick={() => setIsCartOpen(false)}
+                      className="p-2 hover:bg-stone-100 rounded-full transition-colors"
+                      aria-label="Close cart"
+                    >
+                      <Icons.X className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  {/* Cart Items */}
+                  <div className="flex-1 overflow-y-auto p-6">
+                    {cart.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center h-full text-center">
+                        <Icons.Bag className="w-16 h-16 text-stone-300 mb-4" />
+                        <p className="text-stone-500 text-sm mb-2">Your bag is empty</p>
+                        <button
+                          onClick={() => setIsCartOpen(false)}
+                          className="text-stone-900 text-sm underline"
+                        >
+                          Continue shopping
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {cart.map((item, index) => (
+                          <motion.div 
+                            key={item.cartId} 
+                            className="flex gap-4 pb-4 border-b border-stone-100 last:border-0"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.3, delay: index * 0.05 }}
+                            exit={{ opacity: 0, x: 20 }}
+                          >
+                            <div className="w-20 h-20 bg-stone-100 rounded-sm overflow-hidden flex-shrink-0">
+                              <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h3 className="font-serif text-sm font-medium text-stone-900 mb-1">{item.name}</h3>
+                              {item.size && (
+                                <p className="text-xs text-stone-400 mb-1">Size: {item.size}</p>
+                              )}
+                              <p className="text-xs text-stone-500 mb-2">${item.price}</p>
+                              <div className="flex items-center gap-3 mb-2">
+                                <span className="text-xs text-stone-500">Quantity:</span>
+                                <div className="flex items-center gap-2 border border-stone-200 rounded-sm">
+                                  <motion.button
+                                    onClick={() => updateQuantity(item.cartId, -1)}
+                                    className="p-1 hover:bg-stone-100 transition-colors disabled:opacity-30"
+                                    disabled={item.quantity <= 1}
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                  >
+                                    <Icons.Minus className="w-3 h-3" />
+                                  </motion.button>
+                                  <motion.span 
+                                    className="text-xs font-medium px-2 min-w-[2rem] text-center"
+                                    key={item.quantity}
+                                    initial={{ scale: 1.2 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ duration: 0.2 }}
+                                  >
+                                    {item.quantity}
+                                  </motion.span>
+                                  <motion.button
+                                    onClick={() => updateQuantity(item.cartId, 1)}
+                                    className="p-1 hover:bg-stone-100 transition-colors"
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.9 }}
+                                  >
+                                    <Icons.Plus className="w-3 h-3" />
+                                  </motion.button>
+                                </div>
+                              </div>
+                              <motion.button
+                                onClick={() => removeFromCart(item.cartId)}
+                                className="text-xs text-stone-400 hover:text-stone-900 underline"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                              >
+                                Remove
+                              </motion.button>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Cart Footer */}
+                  {cart.length > 0 && (
+                    <div className="border-t border-stone-200 p-6 space-y-4">
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-stone-600">Subtotal</span>
+                          <span className="text-lg font-bold">
+                            ${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
+                          </span>
+                        </div>
+                        <div className="flex justify-between items-center text-xs text-stone-500">
+                          <span>Items ({cart.reduce((sum, item) => sum + item.quantity, 0)})</span>
+                          <span>Shipping calculated at checkout</span>
+                        </div>
+                      </div>
+                      <motion.button
+                        className="btn-primary w-full bg-stone-900 text-white py-4 text-sm font-medium uppercase tracking-widest hover:bg-stone-800 transition-all relative overflow-hidden"
+                        onClick={() => {
+                          setIsCartOpen(false);
+                          setIsCheckoutOpen(true);
+                        }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <span className="relative z-10">Checkout</span>
+                      </motion.button>
+                    </div>
+                  )}
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Product Detail Modal */}
+          <AnimatePresence>
+            {selectedId && selectedItem && (
+              <motion.div 
+                className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-8 pointer-events-none"
+                initial="initial"
+                animate="animate"
+                exit="exit"
+              >
+                <motion.div 
+                  className="absolute inset-0 bg-white/90 backdrop-blur-xl pointer-events-auto" 
+                  variants={modalVariants.overlay}
+                  onClick={() => setSelectedId(null)}
+                />
+                <motion.div 
+                  layoutId={`card-${selectedId}`} 
+                  className="relative w-full max-w-lg bg-white shadow-2xl overflow-hidden pointer-events-auto rounded-lg h-[80vh] flex flex-col"
+                  variants={modalVariants.content}
+                >
+                   <button 
+                     onClick={() => setSelectedId(null)} 
+                     className="absolute top-4 right-4 z-20 p-2 bg-white/50 rounded-full"
+                     aria-label="Close"
+                   >
+                     <Icons.X className="w-6 h-6" />
+                   </button>
+                   <div className="relative h-[60%] bg-stone-100">
+                     {selectedItem.is3D ? (
+                       <ModelView src={selectedItem.modelSrc} poster={selectedItem.image} />
+                     ) : (
+                       <img src={selectedItem.image} alt={selectedItem.name} className="w-full h-full object-cover" />
+                     )}
+                   </div>
+                   <div className="p-8 flex-1 flex flex-col overflow-y-auto">
+                     <h2 className="font-serif text-3xl italic mb-2">{selectedItem.name}</h2>
+                     <p className="text-stone-500 text-sm mb-6">Expertly crafted.</p>
+                     
+                     {/* Size Selection */}
+                     <div className="mb-6">
+                       <label className="block text-sm font-medium text-stone-900 mb-3">
+                         Size <span className="text-red-500">*</span>
+                       </label>
+                       <div className="flex gap-3">
+                         {['S', 'M', 'L', 'XL'].map((size) => (
+                           <motion.button
+                             key={size}
+                             onClick={() => {
+                               setSelectedSize(size);
+                               setSizeError(false);
+                             }}
+                             className={`w-12 h-12 rounded-full border-2 transition-all font-medium text-sm ${
+                               selectedSize === size
+                                 ? 'bg-stone-900 text-white border-stone-900'
+                                 : 'bg-white text-stone-900 border-stone-200 hover:border-stone-400'
+                             }`}
+                             whileHover={{ scale: 1.05 }}
+                             whileTap={{ scale: 0.95 }}
+                             initial={{ opacity: 0, scale: 0.8 }}
+                             animate={{ opacity: 1, scale: 1 }}
+                             transition={{ delay: 0.1 }}
+                           >
+                             {size}
+                           </motion.button>
+                         ))}
+                       </div>
+                       {sizeError && (
+                         <motion.p
+                           className="text-xs text-red-500 mt-2"
+                           initial={{ opacity: 0, y: -5 }}
+                           animate={{ opacity: 1, y: 0 }}
+                           exit={{ opacity: 0 }}
+                         >
+                           Please select a size
+                         </motion.p>
+                       )}
+                     </div>
+
+                     <div className="mt-auto pt-4 border-t border-stone-200">
+                       <div className="flex gap-4 items-center mb-4">
+                         <motion.div 
+                           className="text-xl font-medium"
+                           initial={{ opacity: 0 }}
+                           animate={{ opacity: 1 }}
+                           transition={{ delay: 0.3 }}
+                         >
+                           ${selectedItem.price}
+                         </motion.div>
+                       </div>
+                       <motion.button 
+                         className="btn-primary w-full bg-stone-900 text-white h-12 uppercase tracking-widest text-xs font-bold hover:bg-stone-800 transition-all relative overflow-hidden"
+                         onClick={() => {
+                           if (!selectedSize) {
+                             setSizeError(true);
+                             return;
+                           }
+                           addToCart(selectedItem, selectedSize);
+                           setSelectedId(null);
+                           setSelectedSize(null);
+                           setSizeError(false);
+                         }}
+                         whileHover={{ scale: 1.02 }}
+                         whileTap={{ scale: 0.98 }}
+                       >
+                         <span className="relative z-10">Add to Bag</span>
+                       </motion.button>
+                     </div>
+                   </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Checkout Modal */}
+          <AnimatePresence>
+            {isCheckoutOpen && (
+              <motion.div
+                className="fixed inset-0 z-[100] pointer-events-none"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <div 
+                  className="absolute inset-0 bg-black/50 backdrop-blur-sm pointer-events-auto"
+                  onClick={() => setIsCheckoutOpen(false)}
+                />
+                <motion.div
+                  className="absolute inset-0 flex items-center justify-center p-4 pointer-events-auto"
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                >
+                  <div className="bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                    {orderConfirmed ? (
+                      <div className="p-8 text-center">
+                        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                          <Icons.Check className="w-8 h-8 text-green-600" />
+                        </div>
+                        <h2 className="text-2xl font-serif italic font-bold mb-2">Order Confirmed!</h2>
+                        <p className="text-stone-600 mb-6">Thank you for your purchase. You will receive a confirmation email shortly.</p>
+                        <div className="space-y-2 mb-6 text-sm text-stone-500">
+                          <p>Order #: {Date.now().toString().slice(-8)}</p>
+                          <p>Total: ${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}</p>
+                        </div>
+                        <motion.button
+                          onClick={() => {
+                            setCart([]);
+                            setOrderConfirmed(false);
+                            setIsCheckoutOpen(false);
+                            showToast('Order placed successfully!', 'success');
+                          }}
+                          className="btn-primary bg-stone-900 text-white px-8 py-3 uppercase tracking-widest text-xs font-bold hover:bg-stone-800 transition-all relative overflow-hidden"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <span className="relative z-10">Continue Shopping</span>
+                        </motion.button>
+                      </div>
+                    ) : (
+                      <form
+                        ref={checkoutFormRef}
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          setOrderConfirmed(true);
+                        }}
+                        className="p-8"
+                      >
+                        <div className="flex items-center justify-between mb-6">
+                          <h2 className="text-2xl font-serif italic font-bold">Checkout</h2>
+                          <button
+                            type="button"
+                            onClick={() => setIsCheckoutOpen(false)}
+                            className="p-2 hover:bg-stone-100 rounded-full"
+                          >
+                            <Icons.X className="w-5 h-5" />
+                          </button>
+                        </div>
+
+                        <div className="space-y-6">
+                          {/* Shipping Information */}
+                          <div>
+                            <h3 className="text-sm font-bold uppercase tracking-widest mb-4">Shipping Information</h3>
+                            <div className="grid grid-cols-2 gap-4">
+                              <input
+                                type="text"
+                                placeholder="First Name"
+                                required
+                                className="px-4 py-2 border border-stone-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-stone-900"
+                              />
+                              <input
+                                type="text"
+                                placeholder="Last Name"
+                                required
+                                className="px-4 py-2 border border-stone-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-stone-900"
+                              />
+                              <input
+                                type="email"
+                                placeholder="Email"
+                                required
+                                className="col-span-2 px-4 py-2 border border-stone-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-stone-900"
+                              />
+                              <input
+                                type="text"
+                                placeholder="Address"
+                                required
+                                className="col-span-2 px-4 py-2 border border-stone-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-stone-900"
+                              />
+                              <input
+                                type="text"
+                                placeholder="City"
+                                required
+                                className="px-4 py-2 border border-stone-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-stone-900"
+                              />
+                              <input
+                                type="text"
+                                placeholder="ZIP Code"
+                                required
+                                className="px-4 py-2 border border-stone-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-stone-900"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Payment Information */}
+                          <div>
+                            <h3 className="text-sm font-bold uppercase tracking-widest mb-4">Payment Information</h3>
+                            <div className="space-y-4">
+                              <input
+                                type="text"
+                                placeholder="Card Number"
+                                required
+                                maxLength="19"
+                                className="w-full px-4 py-2 border border-stone-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-stone-900"
+                              />
+                              <div className="grid grid-cols-2 gap-4">
+                                <input
+                                  type="text"
+                                  placeholder="Expiry Date (MM/YY)"
+                                  required
+                                  maxLength="5"
+                                  className="px-4 py-2 border border-stone-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-stone-900"
+                                />
+                                <input
+                                  type="text"
+                                  placeholder="CVV"
+                                  required
+                                  maxLength="4"
+                                  className="px-4 py-2 border border-stone-200 rounded-sm focus:outline-none focus:ring-2 focus:ring-stone-900"
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Order Summary */}
+                          <div className="border-t border-stone-200 pt-6">
+                            <h3 className="text-sm font-bold uppercase tracking-widest mb-4">Order Summary</h3>
+                            <div className="space-y-2 mb-4">
+                              {cart.map(item => (
+                                <div key={item.cartId} className="flex justify-between text-sm">
+                                  <span>{item.name} x{item.quantity}</span>
+                                  <span>${(item.price * item.quantity).toFixed(2)}</span>
+                                </div>
+                              ))}
+                            </div>
+                            <div className="flex justify-between items-center pt-4 border-t border-stone-200">
+                              <span className="text-lg font-bold">Total</span>
+                              <span className="text-xl font-bold">
+                                ${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
+                              </span>
+                            </div>
+                          </div>
+
+                          <motion.button
+                            type="submit"
+                            className="btn-primary w-full bg-stone-900 text-white py-4 text-sm font-medium uppercase tracking-widest hover:bg-stone-800 transition-all relative overflow-hidden"
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            <span className="relative z-10">Place Order</span>
+                          </motion.button>
+                        </div>
+                      </form>
+                    )}
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Toast Notifications */}
+          <AnimatePresence>
+            {toasts.map(toast => (
+              <Toast
+                key={toast.id}
+                message={toast.message}
+                type={toast.type}
+                onClose={() => removeToast(toast.id)}
+              />
+            ))}
+          </AnimatePresence>
+
+        </div>
+      );
+    };
+
+    /* ==================================================================================
+       INITIALIZATION: React App Mount
+       ================================================================================== */
+    
+    // Initialize React app
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
